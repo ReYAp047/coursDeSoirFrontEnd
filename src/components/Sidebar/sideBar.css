@@ -60,3 +60,15 @@
     margin-left: 5px;
     font-size: 20px;
 }
+
+.sidebar-item{
+    color: var(--color-white);
+    transition: var(--transition) ;
+    text-decoration-line: none ;
+}
+
+  .sidebar-item:hover{
+    color: var(--color-light) ;
+    transition: var(--transition) ;
+    cursor: pointer;
+}

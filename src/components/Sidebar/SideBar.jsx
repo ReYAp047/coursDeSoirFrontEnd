@@ -10,10 +10,12 @@ import { TiMessages } from 'react-icons/ti'
 import { MdLiveTv } from 'react-icons/md'
 import { MdReportGmailerrorred } from 'react-icons/md'
 import { BsArrowBarLeft } from 'react-icons/bs'
+import { Link } from 'react-router-dom'
 
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [navHover, setNavHover] = useState("home")
   
   const toggle = () => {
     setIsOpen(!isOpen)
@@ -27,15 +29,24 @@ const SideBar = () => {
         <div className="sidebar-menu">
           <h3 className='sidebar-title'>Dashbord</h3>
           <ul className="sidebar-list">
-            <li className="sidebar-list-item active">
-              <AiOutlineHome className='sidebar-icon'/> Home
+          <Link to="/"  className='sidebar-item'> 
+            <li onClick={() => setNavHover("home")} className={ navHover === 'home' ? "sidebar-list-item active" : "sidebar-list-item" }>
+              <AiOutlineHome className='sidebar-icon'/> 
+             <span>Home</span>
             </li>
-            <li className="sidebar-list-item">
-              <RiFolderReduceLine className='sidebar-icon'/> Cours
+          </Link>
+          <Link to="/cours" className='sidebar-item'>
+            <li onClick={() => setNavHover("cours")} className={ navHover === 'cours' ? "sidebar-list-item active" : "sidebar-list-item" } >
+              <RiFolderReduceLine className='sidebar-icon'/> 
+              <span>Cours</span> 
             </li>
-            <li className="sidebar-list-item">
-              <MdReduceCapacity className='sidebar-icon'/> Students
+          </Link>
+          <Link to="/students" className='sidebar-item' >
+             <li  onClick={() => setNavHover("students")} className={ navHover === 'students' ? "sidebar-list-item active" : "sidebar-list-item" }>
+              <MdReduceCapacity className='sidebar-icon'/> 
+              <span>Students</span> 
             </li>
+          </Link>
             <li className="sidebar-list-item">
               <MdTimeline className='sidebar-icon'/> Analystics
             </li>

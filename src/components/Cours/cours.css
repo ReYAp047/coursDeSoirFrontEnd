@@ -1,26 +1,26 @@
-.groupes-container{
+.cours-container{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.groupes-container h1{
+.cours-container h1{
     text-align: center;
     font-size: 3rem;
     font-family: 'Lota', serif;
 }
 
-.groupes-container h1::first-letter{
+.cours-container h1::first-letter{
     color: var(--primary-color-variant);
 }
 
-.groupes-content table{
+.cours-content table{
     border-collapse: collapse;
     width: 100%;
 }
 
-.groupes-content th,td{
+.cours-content th,td{
     border: 1px solid rgb(255, 255, 255);
     padding: 10px;
     text-align: left;
@@ -28,60 +28,58 @@
     border-radius: 3px;
 }
 
-.groupes-content th{
+.cours-content th{
     background-color: var(--bgSidebar-color);
 }
 
-.groupes-content td{
+.cours-content td{
     background: #3f6cff55;
 }
 
-.groupes-content .btn-edit{
+.cours-content .btn-edit{
     color: var(--primary-color-variant);
     background: var(--white-color);
     border: 1px solid var(--primary-color-variant);
 }
 
-.groupes-content .btn-edit:hover{
+.cours-content .btn-edit:hover{
     color: var(--white-color);
     background: var(--primary-color-variant);
 }
 
-.groupes-content .add-btn:hover{
+.cours-content .add-btn:hover{
   color: var(--primary-color-variant);
   border: 0.1px solid var(--primary-color-variant);
   background: var(--white-color);
 }
 
-.groupes-content .btn-delete{
+.cours-content .btn-delete{
     color: var(--danger-color);
     border: 1px solid var(--danger-color);
     background: var(--white-color);
 }
 
-.groupes-content .btn-delete:hover{
+.cours-content .btn-delete:hover{
     color: var(--white-color);
     background: var(--danger-color);
 }
 
-.groupes-content .action{
+.cours-content .action{
     display: flex;
     gap: 10px;
 }
 
-.groupes-footer{
+.cours-footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 98%;
+    width: 90%;
     height: 70px;
-    margin: 0 1rem;
     box-shadow: 30px 16px 39px 29px rgba(146, 147, 247, 0.17);
     -webkit-box-shadow: 30px 16px 39px 29px rgba(168, 184, 255, 0.173);
     -moz-box-shadow: 30px 16px 39px 29px rgba(116, 108, 255, 0.199);
 }
-
-.groupes-footer input{
+.cours-footer input[type=text]{
     width: 100%;
     height: 30px;
     border: 1px solid rgb(0, 0, 0);
@@ -89,7 +87,14 @@
     padding: 0px 10px;
 }
 
-.groupes-footer form{
+.cours-footer input[type=file]{
+    width: 100%;
+    height: 30px;
+    padding: 0px 10px;
+}
+
+
+.cours-footer form{
     display: flex;
     gap: 20px;
 }
