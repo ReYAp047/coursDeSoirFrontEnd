@@ -1,29 +1,33 @@
 import React, { useState } from 'react'
 import './cours.css'
 import data from '../../students-list.json'
-import { Table } from 'antd'
+import { Table, Popconfirm } from 'antd'
 import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 
 const Cours = () => {
-  const [students, setStudents] = useState([
+  const [cours, setCours] = useState([
     {
+      "id":1,
       "nom_du_cours": "Anglais",
       "level": "1",
       "fichier": "C/aze/aze/aze.pdf",
     },
     {
+      "id":2,
       "nom_du_cours": "Anglais",
       "level": "3",
       "fichier": "C/aze/aze/aze.pdf",
     },
     {
+      "id":3,
       "nom_du_cours": "Anglais",
       "level": "4",
       "fichier": "C/aze/aze/aze.pdf",
     },
     {
+      "id":4,
       "nom_du_cours": "Anglais",
       "level": "2",
       "fichier": "C/aze/aze/aze.pdf",
@@ -42,6 +46,13 @@ const Cours = () => {
           key: '2',
           title: 'Level',
           dataIndex: 'level',
+          filters : [
+            {text: '1er annnee', value: 1},
+            {text: '2eme annnee', value: 2},
+            {text: '3eme annnee', value: 3},
+            {text: '4eme annnee', value: 4},
+        ],
+        onFilter : (value, record) => record.level.includes(value)
       },
       {
           key: '3',
@@ -51,13 +62,11 @@ const Cours = () => {
       {
           title: 'Action',
           key: 'action',
-          render: (text, record) => {
-              return(
-              <div className='action'>
-              <button className='btn btn-edit'><AiOutlineEdit/></button>
-              <button className='btn btn-delete'><AiOutlineDelete/></button>
-              </div>
-          )},
+          render: (_, record) =>cours.length >= 1 ? (
+            <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
+                <button className='btn btn-delete'><AiOutlineDelete/></button>
+            </Popconfirm>
+            ) : null,
       }
   ]
 
@@ -66,11 +75,21 @@ const Cours = () => {
     e.preventDefault();
 
   }
+
+
+
+  const handleDelete = (key) => {
+    const dataSource = [...cours];
+    setCours(dataSource.filter(item => item.id !== key));
+  };
+
+
+
   return (
     <div className='cours-container'>
        <h1>Cours</h1>
      <div className='cours-content'>
-    <Table columns={columns} dataSource={students} pagination={
+    <Table rowKey={record => record.id} columns={columns} bordered dataSource={cours} pagination={
         {
             pageSize: pageSize,
             current: page,
@@ -85,7 +104,7 @@ const Cours = () => {
       <div className="cours-footer">
         <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Course name..." />
-            <input type="text" placeholder="Level..." />
+            <input type="number" placeholder="Level..." />
             <input type="file"/>
             <button type="submit" className='btn add-btn'>Add</button>
         </form>

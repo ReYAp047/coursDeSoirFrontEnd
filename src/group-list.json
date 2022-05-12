@@ -1,5 +1,6 @@
 [
     {
+        "id":1,
         "Nom_du_groupe": "Groupe1",
         "Nombre_Apprenants": "4",
         "Niveau": "2",
@@ -8,6 +9,7 @@
         "Heure": "2"
     },
     {
+        "id":2,
         "Nom_du_groupe": "Groupe2",
         "Nombre_Apprenants": "7",
         "Niveau": "3",
@@ -16,6 +18,7 @@
         "Heure": "2"
     },
     {
+        "id":3,
         "Nom_du_groupe": "Groupe3",
         "Nombre_Apprenants": "11",
         "Niveau": "4",
@@ -24,6 +27,7 @@
         "Heure": "2"
     },
     {
+        "id":4,
         "Nom_du_groupe": "Groupe4",
         "Nombre_Apprenants": "12",
         "Niveau": "1",
@@ -32,6 +36,7 @@
         "Heure": "2"
     },
     {
+        "id":5,
         "Nom_du_groupe": "Groupe5",
         "Nombre_Apprenants": "5",
         "Niveau": "1",
@@ -40,6 +45,7 @@
         "Heure": "2"
     },
     {
+        "id":6,
         "Nom_du_groupe": "Groupe6",
         "Nombre_Apprenants": "2",
         "Niveau": "2",
@@ -48,6 +54,7 @@
         "Heure": "2"
     },
     {
+        "id":7,
         "Nom_du_groupe": "Group7",
         "Nombre_Apprenants": "1",
         "Niveau": "3",
@@ -56,6 +63,7 @@
         "Heure": "2"
     },
     {
+        "id":8,
         "Nom_du_groupe": "Groupe8",
         "Nombre_Apprenants": "9",
         "Niveau": "4",
