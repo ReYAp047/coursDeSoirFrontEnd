@@ -20,6 +20,11 @@
     width: 100%;
 }
 
+.actionAddDelete{
+    display: flex;
+    gap: 5px;
+}
+
 .groupes-content th,td{
     border: 1px solid rgb(255, 255, 255);
     padding: 10px;

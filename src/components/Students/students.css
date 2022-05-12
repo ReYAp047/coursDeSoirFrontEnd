@@ -42,6 +42,11 @@
     border: 1px solid var(--primary-color-variant);
 }
 
+.actionAddDelete{
+    display: flex;
+    gap: 5px;
+}
+
 .students-content .btn-edit:hover{
     color: var(--white-color);
     background: var(--primary-color-variant);

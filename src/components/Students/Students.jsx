@@ -17,6 +17,9 @@ const Students = () => {
     const [Tel_number, setTel_number] = useState("");
     const [group, setGroup] = useState("");
     const [Payment, setPayment] = useState("");
+    const [editRow, setEditRow] = useState('');
+    const [editId, setEditId] = useState('');
+    const [isPending, setIsPending] = useState(false)
 
 
 
@@ -72,26 +75,30 @@ const Students = () => {
             title: 'Action',
             key: 'action',
             render: (_, record) =>students.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
-                <button className='btn btn-delete'><AiOutlineDelete/></button>
-            </Popconfirm>
+                <div className='actionAddDelete'>
+                <button className='btn btn-edit' onClick={() => handleEdit(record)}><AiOutlineEdit/></button>
+                <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
+                    <button className='btn btn-delete'><AiOutlineDelete/></button>
+                </Popconfirm>
+                </div>
             ) : null,
         }
     ]
 
-{/* <button className='btn btn-edit'><AiOutlineEdit/></button> */}
     const handleSubmit = (e) => {
         e.preventDefault();
-        setStudents([...students, {
-            id: students.length + 1,
-            FullName,
-            level,
-            date_in,
-            number_of_sessions,
-            Tel_number,
-            Payment,
-            group,
-        }]);
+        const newStudent = { FullName, level, date_in, number_of_sessions, Tel_number, Payment, group  };
+
+        if(editRow ===""){
+            setStudents([...Students, newStudent]);
+            setIsPending(true)
+        }else{
+            const data = [...students];
+            const index = data.findIndex(item => editId === item.id);
+            data.splice(index, 1, newStudent);
+            setStudents(data)
+            setEditRow(false)
+        }
         setFullName("");
         setLevel("");
         setDate_in("");
@@ -99,9 +106,21 @@ const Students = () => {
         setTel_number("");
         setPayment("");
         setGroup("");
+        setIsPending(false);
     }
 
-
+        const handleEdit = (record) =>{
+            const editStudent = {...record}
+            setEditRow(true);
+            setFullName(editStudent.FullName);
+            setLevel(editStudent.level);
+            setDate_in(editStudent.date_in);
+            setNumber_of_sessions(editStudent.number_of_sessions);
+            setTel_number(editStudent.Tel_number);
+            setPayment(editStudent.Payment)
+            setGroup(editStudent.group)
+            setEditId(record.id)
+        }
       
       const handleDelete = (key) => {
         const dataSource = [...students];
@@ -134,7 +153,9 @@ const Students = () => {
                 <input type="tel" placeholder="Tel_number..." value={Tel_number} onChange={(e)=> setTel_number(e.target.value)} />
                 <input type="text" placeholder="Payment..."  value={Payment} onChange={(e)=> setPayment(e.target.value)}/>
                 <input type="number" placeholder="Group..."  value={group} onChange={(e)=> setGroup(e.target.value)}/>
-                <button type="submit" className='btn add-btn'>Add</button>
+                {
+                    editRow ? <button type="submit" className='btn add-btn'>Edit</button>: <button type="submit" className='btn add-btn'>Add</button>
+                }
             </form>
         </div>
     </div>

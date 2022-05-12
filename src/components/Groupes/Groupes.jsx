@@ -73,12 +73,12 @@ const Groupes = () => {
             key: 'action',
             render: (_, record) =>
                     groupes.length >= 1 ? (
-                    <>
+                    <div className='actionAddDelete'>
+                    <button className='btn btn-edit' onClick={() => handleEdit(record)}><AiOutlineEdit/></button>
                     <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
                         <button className='btn btn-delete'><AiOutlineDelete/></button>
                     </Popconfirm>
-                    <button className='btn btn-edit' onClick={() => handleEdit(record)}><AiOutlineEdit/></button>
-                    </>
+                    </div>
           ) : null,
         }
     ]
