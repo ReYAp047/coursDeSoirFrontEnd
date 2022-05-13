@@ -97,3 +97,10 @@
     gap: 20px;
 }
 
+.main-side{
+    display: flex;
+}
+
+.main-students{
+    flex: 4;
+}

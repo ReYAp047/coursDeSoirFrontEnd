@@ -99,3 +99,10 @@
     gap: 20px;
 }
 
+.main-side{
+    display: flex;
+}
+
+.main-cours{
+    flex: 4;
+}

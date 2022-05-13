@@ -5,6 +5,8 @@ import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import axios from 'axios'
+import SideBar from '../Sidebar/SideBar'
+import TopBar from '../Topbar/TopBar'
 
 const Groupes = () => {
 
@@ -83,28 +85,17 @@ const Groupes = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newGroupe = { groupName, numberOfLearners, groupLevel, groupSessionNumber, nextSessionDate, hour };
+        const id = editId;
+        const newGroupe = { id, groupName, numberOfLearners, groupLevel, groupSessionNumber, nextSessionDate, hour };
         if(editRow === false){
-            axios.post('http://localhost:7100/group', newGroupe) 
+            axios.post('https://localhost:7100/api/Group/', newGroupe) 
             .then(res => {
                 setGroupes([...groupes, res.data]);
                 form.resetFields();
             })
             .catch(err => console.log(err))
         }else{
-            axios.put(`http://localhost:7100/group/${editId}`, newGroupe)
-            .then(res => {
-                const newGroupes = groupes.map(group => {
-                    if(group.id === editId){
-                        return res.data
-                    }else{
-                        return group
-                    }
-                })
-                setGroupes(newGroupes);
-                form.resetFields();
-                setEditRow(false);
-            })
+            axios.put(`https://localhost:7100/api/Group/`, newGroupe)
             .catch(err => console.log(err))
         }
         setGroup("");
@@ -118,7 +109,7 @@ const Groupes = () => {
 
       
       const handleDelete = (key) => {
-        axios.delete(`http://localhost:7100/group/${key}`)
+        axios.delete(`https://localhost:7100/api/Group/${key}/`)
         .then(res => {
             const newGroupes = groupes.filter(group => group.id !== key);
             setGroupes(newGroupes);
@@ -139,7 +130,7 @@ const Groupes = () => {
       };
 
       useEffect(() => {
-        axios.get('http://localhost:7100/group')
+        axios.get('https://localhost:7100/api/Group/')
         .then(res => {
             setGroupes(res.data);
         })
@@ -148,7 +139,12 @@ const Groupes = () => {
 
 
   return (
-    <div className='groupes-container'>
+      <>
+      <TopBar/>
+      <div className='main-side'>
+        <SideBar group="home"/>
+        <div className="main-groupe">
+        <div className='groupes-container'>
         <h1>Groupes</h1>
         <div className='groupes-content'>
         <Form form={form} component={false}>
@@ -185,6 +181,9 @@ const Groupes = () => {
             </form>
         </div>
     </div>
+    </div>
+    </div>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './sideBar.css'
 import { AiOutlineHome } from 'react-icons/ai'
 import { RiFolderReduceLine } from 'react-icons/ri'
@@ -13,18 +13,25 @@ import { BsArrowBarLeft } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 
 
-const SideBar = () => {
+const SideBar = ({ student , group, cours }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [navHover, setNavHover] = useState("home")
+  const [navHover, setNavHover] = useState(null)
   
   const toggle = () => {
     setIsOpen(!isOpen)
   }
 
+  useEffect(() => {
+    cours === "cours" ? setNavHover("cours") : setNavHover("")
+    student === "students" ? setNavHover("students") : setNavHover("")
+    group === "home" ? setNavHover("home") : setNavHover("")
+
+  }, [student, group, cours])
+
   return (
     <div className='sidebar'>
       <div className='sidebar-container'>
-        <BsArrowBarLeft className='toggle-btn' onClick={toggle}/>
+        {/* <BsArrowBarLeft className='toggle-btn' onClick={toggle}/> */}
         {/* <BsArrowBarRight/> */}
         <div className="sidebar-menu">
           <h3 className='sidebar-title'>Dashbord</h3>

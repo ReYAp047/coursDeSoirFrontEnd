@@ -5,6 +5,8 @@ import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import axios from 'axios'
+import TopBar from '../Topbar/TopBar'
+import SideBar from '../Sidebar/SideBar'
 
 const Students = () => {
     const [students, setStudents] = useState([]);
@@ -85,20 +87,20 @@ const Students = () => {
         }
     ]
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newStudent = { name, level, entryDate, numberOfSessions, phoneNumber, payment, groupName };
+        const id = editId;
+        const newStudent = { id, name, level, entryDate, numberOfSessions, phoneNumber, payment, groupName };
         console.log(newStudent);
         console.log(editRow);
         if(editRow === false){
-            axios.post('http://localhost:7100/Etudiant', newStudent)
+            axios.post('https://localhost:7100/api/Etudiant/', newStudent)
             .then(res => {
                 setStudents([...students, res.data]);
             })
             .catch(err => console.log(err));
         }else{
-            axios.put(`http://localhost:7100/Etudiant/${editId}`, newStudent)
+            axios.put(`https://localhost:7100/api/Etudiant/`, newStudent)
             .then(res => {
                 setStudents(students.map(
                     student => student.id === editId ? res.data : student
@@ -131,7 +133,7 @@ const Students = () => {
         }
       
       const handleDelete = (key) => {
-        axios.delete(`http://localhost:7100/Etudiant/${key}`)
+        axios.delete(`https://localhost:7100/api/Etudiant/${key}/`)
         const data = [...students];
         const index = data.findIndex(item => key === item.id);
         data.splice(index, 1);
@@ -139,7 +141,7 @@ const Students = () => {
       };
 
       useEffect(() => {
-        axios.get('http://localhost:7100/Etudiant')
+        axios.get('https://localhost:7100/api/Etudiant/')
         .then(res => {
             setStudents(res.data);
         })
@@ -149,7 +151,7 @@ const Students = () => {
 
         
   useEffect(() => {
-    axios.get('http://localhost:7100/Group')
+    axios.get('https://localhost:7100/api/Group/')
     .then(res => {
         setGroup(res.data);
     })
@@ -157,6 +159,11 @@ const Students = () => {
     }, [students])
 
   return (
+    <>
+    <TopBar />
+    <div className='main-side'>
+      <SideBar student="students"/>
+    <div className="main-students">
     <div className='students-container'>
         <h1>Students</h1>
         <div className='students-content'>
@@ -197,6 +204,9 @@ const Students = () => {
             </form>
         </div>
     </div>
+    </div>
+    </div>
+    </>
   )
 }
 

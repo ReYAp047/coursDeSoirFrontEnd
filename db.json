@@ -15,7 +15,7 @@
       "groupLevel": "4",
       "groupSessionNumber": "3",
       "nextSessionDate": "2022-10-16",
-      "hour": "6h",
+      "hour": "10h",
       "id": 2
     },
     {
@@ -24,8 +24,17 @@
       "groupLevel": "3",
       "groupSessionNumber": "5",
       "nextSessionDate": "2022-05-20",
-      "hour": "10h",
+      "hour": "15h",
       "id": 3
+    },
+    {
+      "groupName": "groupe4",
+      "numberOfLearners": "10",
+      "groupLevel": "3",
+      "groupSessionNumber": "2",
+      "nextSessionDate": "2022-05-25",
+      "hour": "10h",
+      "id": 4
     }
   ],
   "Cour": [
@@ -138,7 +147,7 @@
       "numberOfSessions": "121",
       "phoneNumber": "123456798",
       "payment": "false",
-      "groupName": "",
+      "groupName": "groupe2",
       "id": 8
     }
   ]

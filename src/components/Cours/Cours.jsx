@@ -5,7 +5,8 @@ import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import axios from 'axios'
-import { Group } from 'antd/lib/avatar'
+import SideBar from '../Sidebar/SideBar'
+import TopBar from '../Topbar/TopBar'
 
 const Cours = () => {
   const [cours, setCours] = useState([]);
@@ -58,7 +59,7 @@ const Cours = () => {
   ]
 
   useEffect(() => {
-    axios.get('http://localhost:7100/Cour')
+    axios.get('https://localhost:7100/api/Cours/')
     .then(res => {
         setCours(res.data);
     })
@@ -70,7 +71,8 @@ const Cours = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newCours = { courseName, courseLevel, fileUrl };
+    const id = editId;
+    const newCours = { id, courseName, courseLevel, fileUrl };
     if(editRow === false){
       axios.post('http://localhost:7100/Cour', newCours)
     .then(res => {
@@ -79,14 +81,7 @@ const Cours = () => {
     })
     .catch(err => console.log(err))
   }else{
-    axios.put(`http://localhost:7100/Cour/${editId}`, newCours)
-    .then(res => {
-        const newCours = res.data;
-        const newCoursList = cours.map(cours => cours.id === newCours.id ? newCours : cours);
-        setCours(newCoursList);
-        setEditRow(false);
-        form.resetFields();
-    })
+    axios.put(`https://localhost:7100/api/Cours/`, newCours)
     .catch(err => console.log(err))
   }
   setCoursName('');
@@ -105,7 +100,7 @@ const Cours = () => {
 
 
   const handleDelete = (key) => {
-    axios.delete(`http://localhost:7100/Cour/${key}`)
+    axios.delete(`https://localhost:7100/api/Cours/${key}/`)
     .then(res => {
         setCours(cours.filter(cour => cour.id !== key))
     })
@@ -115,6 +110,11 @@ const Cours = () => {
 
 
   return (
+    <>
+    <TopBar />
+    <div className='main-side'>
+      <SideBar cours="cours" />
+      <div className="main-cours">
     <div className='cours-container'>
        <h1>Cours</h1>
      <div className='cours-content'>
@@ -143,6 +143,9 @@ const Cours = () => {
         </form>
       </div>
     </div>
+    </div>
+    </div>
+    </>
   )
 }
 
