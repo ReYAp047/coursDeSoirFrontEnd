@@ -2,11 +2,12 @@ import React,{ useState} from 'react'
 import './login.css'
 import { AiOutlineMail } from 'react-icons/ai'
 import { BsKey } from 'react-icons/bs'
-import { Navigate } from 'react-router-dom'
+import { useNavigate  } from 'react-router-dom'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -14,7 +15,7 @@ const Login = () => {
     console.log(password);
     if (email === 'foulena@gmail.com' || password === '1234') {
       setError('')
-      Navigate('/home')
+      navigate('/');
     } else {
       setError('Email or password is incorrect')
     }
