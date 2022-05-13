@@ -1,7 +1,6 @@
-import React,{ useState } from 'react'
+import React,{ useEffect, useState } from 'react'
 import'./groupes.css'
-import data from '../../group-list.json'
-import { Table, Input, InputNumber, Popconfirm, Form, Typography  } from 'antd'
+import { Table, Popconfirm, Form  } from 'antd'
 import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
@@ -9,16 +8,15 @@ import axios from 'axios'
 
 const Groupes = () => {
 
-    const [groupes, setGroupes] = useState(data);
+    const [groupes, setGroupes] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
-    const [Nom_du_groupe, setGroup] = useState("");
-    const [Nombre_Apprenants, setNbrLearner] = useState("");
-    const [Niveau, setLevel] = useState("");
-    const [Nombre_de_séances, setNbrSession] = useState("");
-    const [Prochaine_séances, setNextSession] = useState("");
-    const [Heure, setHour] = useState("");
-    const [isPending, setIsPending] = useState(false);
+    const [groupName, setGroup] = useState("");
+    const [numberOfLearners, setNbrLearner] = useState("");
+    const [groupLevel, setLevel] = useState("");
+    const [groupSessionNumber, setNbrSession] = useState("");
+    const [nextSessionDate, setNextSession] = useState("");
+    const [hour, setHour] = useState("");
     const [editRow, setEditRow] = useState(false);
     const [editId, setEditId] = useState(null);
     const [form] = Form.useForm();
@@ -27,20 +25,20 @@ const Groupes = () => {
         {
             key: '1',
             title: 'Name of the group',
-            dataIndex: 'Nom_du_groupe',
+            dataIndex: 'groupName',
         },
         {
             key: '2',
             title: 'Number Learners',
-            dataIndex: 'Nombre_Apprenants',
+            dataIndex: 'numberOfLearners',
             sorter : (record1, record2)=>{
-                return record1.Nombre_Apprenants - record2.Nombre_Apprenants
+                return record1.numberOfLearners - record2.numberOfLearners
             }
         },
         {
             key: '3',
             title: 'Level',
-            dataIndex: 'Niveau',
+            dataIndex: 'groupLevel',
             filters : [
                 {text: '1er annnee', value: 1},
                 {text: '2eme annnee', value: 2},
@@ -48,25 +46,25 @@ const Groupes = () => {
                 {text: '4eme annnee', value: 4},
             ],
             onFilter : (value, record) => 
-            record.Niveau.includes(value)
+            record.groupLevel.includes(value)
         },
         {
             key: '4',
             title: 'Number of sessions',
-            dataIndex: 'Nombre_de_séances',
+            dataIndex: 'groupSessionNumber',
             sorter : (record1, record2)=>{
-                return record1.Nombre_de_séances - record2.Nombre_de_séances
+                return record1.groupSessionNumber - record2.groupSessionNumber
             }
         },
         {
             key: '5',
             title: 'Next session',
-            dataIndex: 'Prochaine_séances',
+            dataIndex: 'nextSessionDate',
         },
         {
             key: '6',
             title: 'Hour',
-            dataIndex: 'Heure',
+            dataIndex: 'hour',
         },
         {
             title: 'Action',
@@ -85,17 +83,29 @@ const Groupes = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const newGroupe = { Nom_du_groupe, Nombre_Apprenants, Niveau, Nombre_de_séances, Prochaine_séances, Heure };
+        const newGroupe = { groupName, numberOfLearners, groupLevel, groupSessionNumber, nextSessionDate, hour };
         if(editRow === false){
-            setGroupes([...groupes, newGroupe]);
-            setIsPending(true);
-        }
-        else{
-            const newData = [...groupes];
-            const index = newData.findIndex(item => editId === item.id);
-            newData.splice(index, 1, newGroupe);
-            setGroupes(newData);
-            setEditRow(false);
+            axios.post('http://localhost:7100/group', newGroupe) 
+            .then(res => {
+                setGroupes([...groupes, res.data]);
+                form.resetFields();
+            })
+            .catch(err => console.log(err))
+        }else{
+            axios.put(`http://localhost:7100/group/${editId}`, newGroupe)
+            .then(res => {
+                const newGroupes = groupes.map(group => {
+                    if(group.id === editId){
+                        return res.data
+                    }else{
+                        return group
+                    }
+                })
+                setGroupes(newGroupes);
+                form.resetFields();
+                setEditRow(false);
+            })
+            .catch(err => console.log(err))
         }
         setGroup("");
         setNbrLearner("");
@@ -103,28 +113,38 @@ const Groupes = () => {
         setNbrSession("");
         setNextSession("");
         setHour("");
-        setIsPending(false);
       }
 
 
-
+      
       const handleDelete = (key) => {
-        const dataSource = [...groupes];
-        setGroupes(dataSource.filter(item => item.id !== key));
+        axios.delete(`http://localhost:7100/group/${key}`)
+        .then(res => {
+            const newGroupes = groupes.filter(group => group.id !== key);
+            setGroupes(newGroupes);
+        })
+        .catch(err => console.log(err))
       };
-
 
       const handleEdit = (record) => {
         const editGroupe = { ...record };
         setEditRow(true);
-        setGroup(editGroupe.Nom_du_groupe);
-        setNbrLearner(editGroupe.Nombre_Apprenants);
-        setLevel(editGroupe.Niveau);
-        setNbrSession(editGroupe.Nombre_de_séances);
-        setNextSession(editGroupe.Prochaine_séances);
-        setHour(editGroupe.Heure);
+        setGroup(editGroupe.groupName);
+        setNbrLearner(editGroupe.numberOfLearners);
+        setLevel(editGroupe.groupLevel);
+        setNbrSession(editGroupe.groupSessionNumber);
+        setNextSession(editGroupe.nextSessionDate);
+        setHour(editGroupe.hour);
         setEditId(record.id);
       };
+
+      useEffect(() => {
+        axios.get('http://localhost:7100/group')
+        .then(res => {
+            setGroupes(res.data);
+        })
+        .catch(err => console.log(err))
+        }, [])
 
 
   return (
@@ -153,12 +173,12 @@ const Groupes = () => {
         </div>
         <div className="groupes-footer">
             <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Group name..." onChange={(e) => setGroup(e.target.value)} value={Nom_du_groupe} required/>
-                <input type="number" placeholder="Number Learners..." onChange={(e) => setNbrLearner(e.target.value)} value={Nombre_Apprenants} required/>
-                <input type="number" placeholder="Level..." onChange={(e) => setLevel(e.target.value)} value={Niveau} required/>
-                <input type="number" placeholder="Number of sessions..." onChange={(e) => setNbrSession(e.target.value)} value={Nombre_de_séances} required/>
-                <input type="date" placeholder="Next session..." onChange={(e) => setNextSession(e.target.value)} value={Prochaine_séances} required/>
-                <input type="number" placeholder="Hour..." onChange={(e) => setHour(e.target.value)} value={Heure} required/>
+                <input type="text" placeholder="Group name..." onChange={(e) => setGroup(e.target.value)} value={groupName} required/>
+                <input type="number" placeholder="Number Learners..." onChange={(e) => setNbrLearner(e.target.value)} value={numberOfLearners} required/>
+                <input type="number" placeholder="Level..." onChange={(e) => setLevel(e.target.value)} value={groupLevel} required/>
+                <input type="number" placeholder="Number of sessions..." onChange={(e) => setNbrSession(e.target.value)} value={groupSessionNumber} required/>
+                <input type="date" placeholder="Next session..." onChange={(e) => setNextSession(e.target.value)} value={nextSessionDate} required/>
+                <input type="text" placeholder="Hour..." onChange={(e) => setHour(e.target.value)} value={hour} required/>
                 {
                     editRow ? <button className='btn btn-add'>Edit</button> : <button className='btn btn-add'>Add</button>
                 }

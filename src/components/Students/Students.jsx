@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './students.css'
-import data from '../../students-list.json'
 import { Table, Tag,Popconfirm } from 'antd'
 import "antd/dist/antd.css"
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
+import axios from 'axios'
 
 const Students = () => {
-    const [students, setStudents] = useState(data);
+    const [students, setStudents] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);    
-    const [FullName, setFullName] = useState("");
+    const [name, setFullName] = useState("");
     const [level, setLevel] = useState("");
-    const [date_in, setDate_in] = useState("");
-    const [number_of_sessions, setNumber_of_sessions] = useState("");
-    const [Tel_number, setTel_number] = useState("");
-    const [group, setGroup] = useState("");
-    const [Payment, setPayment] = useState("");
-    const [editRow, setEditRow] = useState('');
+    const [entryDate, setDate_in] = useState("");
+    const [numberOfSessions, setNumber_of_sessions] = useState("");
+    const [phoneNumber, setTel_number] = useState("");
+    const [group, setGroup] = useState([]);
+    const [payment, setPayment] = useState("");
+    const [editRow, setEditRow] = useState(false);
     const [editId, setEditId] = useState('');
-    const [isPending, setIsPending] = useState(false)
+    const [groupName, setGroupName] = useState("");
 
 
 
@@ -27,7 +27,7 @@ const Students = () => {
         {
             key: '1',
             title: 'FullName',
-            dataIndex: 'FullName',
+            dataIndex: 'name',
         },
         {
             key: '2',
@@ -37,31 +37,31 @@ const Students = () => {
         {
             key: '3',
             title: 'Number of sessions',
-            dataIndex: 'number_of_sessions',
+            dataIndex: 'numberOfSessions',
             sorter : (record1, record2)=>{
-                return record1.Nombre_de_séances - record2.Nombre_de_séances
+                return record1.numberOfSessions - record2.numberOfSessions
             }
         },
         {
             key: '4',
             title: 'Date in',
-            dataIndex: 'date_in',
+            dataIndex: 'entryDate',
         },
         {
             key: '5',
             title: 'Tel number',
-            dataIndex: 'Tel_number',
+            dataIndex: 'phoneNumber',
         },
         {
             key: '6',
             title: 'Payment',
-            dataIndex: 'Payment',
+            dataIndex: 'payment',
             filters : [
                 {text: 'true', value: true},
                 {text: 'false', value: false},
             ],
             onFilter : (value, record) => 
-            record.Payment.includes(value),
+            record.payment.includes(value),
             render: Payment => (
                   Payment === "true" ? <Tag color="green">Yes</Tag> : <Tag color="red">No</Tag>
             ),
@@ -69,7 +69,7 @@ const Students = () => {
         {
             key: '7',
             title: 'Group',
-            dataIndex: 'group',
+            dataIndex: 'groupName',
         },
         {
             title: 'Action',
@@ -85,19 +85,27 @@ const Students = () => {
         }
     ]
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newStudent = { FullName, level, date_in, number_of_sessions, Tel_number, Payment, group  };
-
-        if(editRow ===""){
-            setStudents([...Students, newStudent]);
-            setIsPending(true)
+        const newStudent = { name, level, entryDate, numberOfSessions, phoneNumber, payment, groupName };
+        console.log(newStudent);
+        console.log(editRow);
+        if(editRow === false){
+            axios.post('http://localhost:7100/Etudiant', newStudent)
+            .then(res => {
+                setStudents([...students, res.data]);
+            })
+            .catch(err => console.log(err));
         }else{
-            const data = [...students];
-            const index = data.findIndex(item => editId === item.id);
-            data.splice(index, 1, newStudent);
-            setStudents(data)
-            setEditRow(false)
+            axios.put(`http://localhost:7100/Etudiant/${editId}`, newStudent)
+            .then(res => {
+                setStudents(students.map(
+                    student => student.id === editId ? res.data : student
+                    ));
+                    setEditRow(false)
+            })
+            .catch(err => console.log(err));
         }
         setFullName("");
         setLevel("");
@@ -105,27 +113,48 @@ const Students = () => {
         setNumber_of_sessions("");
         setTel_number("");
         setPayment("");
-        setGroup("");
-        setIsPending(false);
+        setGroupName("");
+        setGroup([]);
     }
 
         const handleEdit = (record) =>{
             const editStudent = {...record}
             setEditRow(true);
-            setFullName(editStudent.FullName);
+            setFullName(editStudent.name);
             setLevel(editStudent.level);
-            setDate_in(editStudent.date_in);
-            setNumber_of_sessions(editStudent.number_of_sessions);
-            setTel_number(editStudent.Tel_number);
-            setPayment(editStudent.Payment)
-            setGroup(editStudent.group)
+            setDate_in(editStudent.entryDate);
+            setNumber_of_sessions(editStudent.numberOfSessions);
+            setTel_number(editStudent.phoneNumber);
+            setPayment(editStudent.payment)
+            setGroupName(editStudent.groupName);
             setEditId(record.id)
         }
       
       const handleDelete = (key) => {
-        const dataSource = [...students];
-        setStudents(dataSource.filter(item => item.id !== key));
+        axios.delete(`http://localhost:7100/Etudiant/${key}`)
+        const data = [...students];
+        const index = data.findIndex(item => key === item.id);
+        data.splice(index, 1);
+        setStudents(data);
       };
+
+      useEffect(() => {
+        axios.get('http://localhost:7100/Etudiant')
+        .then(res => {
+            setStudents(res.data);
+        })
+        .catch(err => console.log(err))
+        }, [])
+
+
+        
+  useEffect(() => {
+    axios.get('http://localhost:7100/Group')
+    .then(res => {
+        setGroup(res.data);
+    })
+    .catch(err => console.log(err))
+    }, [students])
 
   return (
     <div className='students-container'>
@@ -146,14 +175,23 @@ const Students = () => {
         </div>
         <div className="students-footer">
             <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Student name..." value={FullName} onChange={(e)=> setFullName(e.target.value)}/>
+                <input type="text" placeholder="Student name..." value={name} onChange={(e)=> setFullName(e.target.value)}/>
                 <input type="number" placeholder="Level..." value={level} onChange={(e)=> setLevel(e.target.value)}/>
-                <input type="number" placeholder="Number of sessions..."  value={number_of_sessions} onChange={(e)=> setNumber_of_sessions(e.target.value)}/>
-                <input type="date" placeholder="Date in..."  value={date_in} onChange={(e)=> setDate_in(e.target.value)}/>
-                <input type="tel" placeholder="Tel_number..." value={Tel_number} onChange={(e)=> setTel_number(e.target.value)} />
-                <input type="text" placeholder="Payment..."  value={Payment} onChange={(e)=> setPayment(e.target.value)}/>
-                <input type="number" placeholder="Group..."  value={group} onChange={(e)=> setGroup(e.target.value)}/>
-                {
+                <input type="number" placeholder="Number of sessions..."  value={numberOfSessions} onChange={(e)=> setNumber_of_sessions(e.target.value)}/>
+                <input type="date" placeholder="Date in..."  value={entryDate} onChange={(e)=> setDate_in(e.target.value)}/>
+                <input type="tel" placeholder="Tel_number..." value={phoneNumber} onChange={(e)=> setTel_number(e.target.value)} />
+                {/* <input type="text" placeholder="Payment..."  value={payment} onChange={(e)=> setPayment(e.target.value)}/> */}
+                <select value={payment} onChange={(e)=> setPayment(e.target.value)}>
+                    <option value="nothing">Payment Yes/No ?</option>
+                    <option key="1" value="true">Yes</option>
+                    <option key="2" value="false">No</option>
+                </select>
+                <select value={ groupName } onChange={(e) => setGroupName(e.target.value)} required>
+                  <option value="nothing">Select your group</option>
+                    {group.map(group => (
+                        <option key={group.id} value={group.groupName}>{group.groupName}</option>
+                    ))}
+                </select>                {
                     editRow ? <button type="submit" className='btn add-btn'>Edit</button>: <button type="submit" className='btn add-btn'>Add</button>
                 }
             </form>
