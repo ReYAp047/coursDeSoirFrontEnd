@@ -18,10 +18,12 @@ const Students = () => {
     const [numberOfSessions, setNumber_of_sessions] = useState("");
     const [phoneNumber, setTel_number] = useState("");
     const [group, setGroup] = useState([]);
-    const [payment, setPayment] = useState("");
+    const [payment, setPayment] = useState(false);
     const [editRow, setEditRow] = useState(false);
     const [editId, setEditId] = useState('');
     const [groupName, setGroupName] = useState("");
+    const tt="true";
+    const ff = "false";
 
 
 
@@ -71,7 +73,7 @@ const Students = () => {
         {
             key: '7',
             title: 'Group',
-            dataIndex: 'groupName',
+            dataIndex: 'group',
         },
         {
             title: 'Action',
@@ -91,10 +93,12 @@ const Students = () => {
         e.preventDefault();
         const id = editId;
         const newStudent = { id, name, level, entryDate, numberOfSessions, phoneNumber, payment, groupName };
+        const addNewStudent = {name, level, entryDate, numberOfSessions, phoneNumber, payment, groupName };
+
         console.log(newStudent);
         console.log(editRow);
         if(editRow === false){
-            axios.post('https://localhost:7100/api/Etudiant/', newStudent)
+            axios.post('https://localhost:7100/api/Etudiant/', addNewStudent)
             .then(res => {
                 setStudents([...students, res.data]);
             })
@@ -190,8 +194,8 @@ const Students = () => {
                 {/* <input type="text" placeholder="Payment..."  value={payment} onChange={(e)=> setPayment(e.target.value)}/> */}
                 <select value={payment} onChange={(e)=> setPayment(e.target.value)}>
                     <option value="nothing">Payment Yes/No ?</option>
-                    <option key="1" value="true">Yes</option>
-                    <option key="2" value="false">No</option>
+                    <option key="1" value={tt}>Yes</option>
+                    <option key="2" value={ff   }>No</option>
                 </select>
                 <select value={ groupName } onChange={(e) => setGroupName(e.target.value)} required>
                   <option value="nothing">Select your group</option>

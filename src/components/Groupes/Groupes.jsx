@@ -87,15 +87,17 @@ const Groupes = () => {
         e.preventDefault();
         const id = editId;
         const newGroupe = { id, groupName, numberOfLearners, groupLevel, groupSessionNumber, nextSessionDate, hour };
+        const addNewGroupe = { groupName, numberOfLearners, groupLevel, groupSessionNumber, nextSessionDate, hour };
+
         if(editRow === false){
-            axios.post('https://localhost:7100/api/Group/', newGroupe) 
+           await axios.post('https://localhost:7100/api/Group/', addNewGroupe) 
             .then(res => {
                 setGroupes([...groupes, res.data]);
                 form.resetFields();
             })
             .catch(err => console.log(err))
         }else{
-            axios.put(`https://localhost:7100/api/Group/`, newGroupe)
+            await axios.put(`https://localhost:7100/api/Group/`, newGroupe)
             .catch(err => console.log(err))
         }
         setGroup("");

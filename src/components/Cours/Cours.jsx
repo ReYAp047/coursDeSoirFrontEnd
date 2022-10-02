@@ -59,7 +59,7 @@ const Cours = () => {
   ]
 
   useEffect(() => {
-    axios.get('https://localhost:7100/api/Cours/')
+    axios.get('https://localhost:7100/api/CoursContoller/')
     .then(res => {
         setCours(res.data);
     })
@@ -73,15 +73,17 @@ const Cours = () => {
     e.preventDefault();
     const id = editId;
     const newCours = { id, courseName, courseLevel, fileUrl };
+    const addNewCours = { courseName, courseLevel, fileUrl };
+
     if(editRow === false){
-      axios.post('http://localhost:7100/Cour', newCours)
+      axios.post('https://localhost:7100/api/CoursContoller/', addNewCours)
     .then(res => {
         setCours([...cours, res.data]);
         form.resetFields();
     })
     .catch(err => console.log(err))
   }else{
-    axios.put(`https://localhost:7100/api/Cours/`, newCours)
+    axios.put(`https://localhost:7100/api/CoursContoller/`, newCours)
     .catch(err => console.log(err))
   }
   setCoursName('');
@@ -100,7 +102,7 @@ const Cours = () => {
 
 
   const handleDelete = (key) => {
-    axios.delete(`https://localhost:7100/api/Cours/${key}/`)
+    axios.delete(`https://localhost:7100/api/CoursContoller/${key}/`)
     .then(res => {
         setCours(cours.filter(cour => cour.id !== key))
     })
